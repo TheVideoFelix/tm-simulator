@@ -1,0 +1,5 @@
+# removed dirs
+.vscode
+__pycache__
+
+
