@@ -1,7 +1,7 @@
 import sys
 import os
 import logging
-from tm import Tape, Transition, TuringMachine as TM
+from tm import Tape, Transition, TuringMachine as TM, MultiTapeTuringMachine as MTTM
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -10,14 +10,15 @@ def main() -> int:
     args_len = len(args)
 
     if args_len != 3:
-        logging.error('Usage: python %s <path_to_file.TM> <TM input>', args[0])
+        logging.error('Usage: python %s <path_to_file.TM|MTTM> <TM input>', args[0])
         logging.error('Please provide exactly one file path as an argument')
         return 1
     
     file_path = args[1]
+    print(file_path)
     
-    if not file_path.endswith('.TM'):
-        logging.error('The provided file is not a .TM file.')
+    if not file_path.endswith(('.TM', '.MTTM')):
+        logging.error('The provided file is not a .TM or .MTTM file.')
         return 1
     
     file_lines = read_file(file_path)
@@ -31,6 +32,12 @@ def main() -> int:
         return 1
     
     file_lines.reverse()
+
+    tapes = 1
+
+    if file_path.endswith('.MTTM'):
+        tapes = int(file_lines.pop())
+
     states = int(file_lines.pop())
     alphabet = list(file_lines.pop())
     tape_alphabet = list(file_lines.pop())
@@ -51,9 +58,14 @@ def main() -> int:
         logging.error(e)
         return 1
 
-    turing_machine_input = args[2]
+    turing_machine_input = args[2].split(',')
 
-    turing_machine = TM(states, alphabet, tape_alphabet, start_state, end_state, transitions)
+    if tapes > 1:
+        turing_machine = MTTM(tapes, states, alphabet, tape_alphabet, start_state, end_state, transitions) 
+    else:
+        turing_machine = TM(states, alphabet, tape_alphabet, start_state, end_state, transitions)
+
+
     turing_machine.input(turing_machine_input)
 
     try:
