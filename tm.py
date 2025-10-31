@@ -40,11 +40,9 @@ class MultiTapeTuringMachine:
         if not len(transition.new_tape_symbols) == self.number_of_tapes :
             raise Exception(f"Transition for state '{self.state}' and tape symbols '{tape_symbols}' does not provide the correct number of new tape symbols ({len(transition.new_tape_symbols)} given, expected {self.number_of_tapes}).")
 
-        for i, new_tape_symbols in enumerate(transition.new_tape_symbols):
-            self.tapes[i].set_head_value(new_tape_symbols)
-
-        for i, direction in enumerate(transition.directions):
-            self.tapes[i].move_head(direction)
+        for tape, new_symbol, direction in zip(self.tapes, transition.new_tape_symbols, transition.directions):
+            tape.set_head_value(new_symbol)
+            tape.move_head(direction)
 
         self.state = transition.new_state
     
