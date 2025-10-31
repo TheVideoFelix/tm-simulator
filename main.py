@@ -10,12 +10,11 @@ def main() -> int:
     args_len = len(args)
 
     if args_len != 3:
-        logging.error('Usage: python %s <path_to_file.TM|MTTM> <TM input>', args[0])
+        logging.error('Usage: python %s <path_to_file.TM|MTTM> <TM_input>', args[0])
         logging.error('Please provide exactly one file path as an argument')
         return 1
     
     file_path = args[1]
-    print(file_path)
     
     if not file_path.endswith(('.TM', '.MTTM')):
         logging.error('The provided file is not a .TM or .MTTM file.')
