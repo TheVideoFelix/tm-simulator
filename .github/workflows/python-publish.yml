@@ -9,6 +9,14 @@
 name: Publish Python Package
 
 on:
+
+workflow_dispatch:
+    inputs:
+      log_level:
+        description: 'Set the log level for the build'
+        required: false
+        default: 'INFO'
+        type: string
   push:
     tags:
       - 'v*'
