@@ -1,5 +1,6 @@
 # removed dirs
 .vscode
 __pycache__
-
-
+dist
+venv
+*.egg-info
