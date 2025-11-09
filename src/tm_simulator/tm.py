@@ -55,7 +55,7 @@ class MultiTapeTuringMachine:
 
     def current_tape_str(self) -> str:
         return "".join(
-            f'Tape {i}: ...B{left}[{self.state}]{head}{right}B...'
+            f'Tape {i}: ...B{"".join(left)}[{self.state}]{head}{"".join(right)}B...'
             for i, tape in enumerate(self.tapes)
             for left, head, right in [tape.get_tape_representation()]
         )
@@ -169,17 +169,15 @@ class Tape:
         else:
             self.tape_to_right.append(self.blank())
 
-    def get_tape_representation(self) -> tuple[str, str, str]:
-        left_str = "".join(self.tape_to_left)
+    def get_tape_representation(self) -> tuple[list[str], str, list[str]]:
         if not self.tape_to_right:
             head_char = self.blank()
-            right_str = ""
+            right_list = []
         else:
             head_char = self.tape_to_right[-1]
-            right_part_list = self.tape_to_right[:-1]
-            right_part_list.reverse()
-            right_str = "".join(right_part_list)
-        return left_str, head_char, right_str
+            right_list = self.tape_to_right[:-1]
+            right_list.reverse()
+        return self.tape_to_left, head_char, right_list
 
     @staticmethod
     def blank() -> str:
@@ -187,5 +185,5 @@ class Tape:
 
     def __str__(self) -> str:
         left, head, right = self.get_tape_representation()
-        return f'...B{left}[{head}]{right}B...'
+        return f'...B{"".join(left)}[{head}]{"".join(right)}B...'
     
