@@ -23,6 +23,7 @@ class MultiTapeTuringMachine:
         self.transitions = {transition.get_key(): transition for transition in transitions}
         
         self.tapes = [Tape() for _ in range(number_of_tapes)]
+        self.start_state = start_state
         self.state = start_state
         self.is_halted = False
 
@@ -54,8 +55,13 @@ class MultiTapeTuringMachine:
         while not self.is_halted:
             print(self.current_tape_str())
             self.step()
-        print(self.current_tape_str())
 
+    def clear(self, rest_taps: bool = True) -> None:
+        self.state = self.start_state
+        self.is_halted = False
+        if rest_taps:
+            for tape in self.tapes:
+                tape.clear()
 
     def current_tape_str(self) -> str:
         return "".join(
@@ -136,6 +142,10 @@ class Tape:
     def __init__(self) -> None:
         self.tape_to_left: list[str] = []
         self.tape_to_right: list[str] = []
+
+    def clear(self) -> None:
+        self.tape_to_left = []
+        self.tape_to_right = []
 
     def init_tape(self, input: str) -> None:
         self.tape_to_right = list(reversed(list(input)))
