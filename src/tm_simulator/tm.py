@@ -33,10 +33,10 @@ class MultiTapeTuringMachine:
         for i, tape_input in enumerate(inputs):
             self.tapes[i].init_tape(tape_input)
     
-    def step(self) -> None:
+    def step(self) -> list[HeadMovingDirections] | None:
         if self.state == self.end_state:
             self.is_halted = True
-            return
+            return None
         tape_symbols = [tape.get_head_value() for tape in self.tapes]
         transition = self.transitions.get(self.state + "".join(tape_symbols))
         if transition is None:
@@ -45,11 +45,13 @@ class MultiTapeTuringMachine:
         if not len(transition.new_tape_symbols) == self.number_of_tapes :
             raise Exception(f"Transition for state '{self.state}' and tape symbols '{tape_symbols}' does not provide the correct number of new tape symbols ({len(transition.new_tape_symbols)} given, expected {self.number_of_tapes}).")
 
+
         for tape, new_symbol, direction in zip(self.tapes, transition.new_tape_symbols, transition.directions):
             tape.set_head_value(new_symbol)
             tape.move_head(direction)
 
         self.state = transition.new_state
+        return transition.directions
     
     def run(self) -> None:
         while not self.is_halted:

@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from .tm import TuringMachine, MultiTapeTuringMachine, Tape, Transition, HeadMovingDirections
 from .core import load_tm, run_tm, read_file
